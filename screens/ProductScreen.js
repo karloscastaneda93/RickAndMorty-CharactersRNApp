@@ -37,7 +37,7 @@ export default function FavouriteScreen(props) {
                         shadowOpacity: 0.9,
                     }}
                     className="flex-row justify-center">
-                    <Image source={{uri:item.image}} className="h-60 w-60 rounded-full" />
+                    <Image source={{ uri: item.image }} className="h-60 w-60 rounded-full" />
                 </View>
                 <View className="flex-row justify-between items-center">
                     <Text style={{ color: themeColors.text }} className="text-3xl font-semibold text-center w-screen">
