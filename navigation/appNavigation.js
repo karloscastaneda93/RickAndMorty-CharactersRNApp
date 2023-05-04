@@ -2,14 +2,27 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
+
 import { LogBox, View } from 'react-native';
-import ProductScreen from '../screens/ProductScreen';
 import { themeColors } from '../theme';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeIcon as HomeOutline, HeartIcon as HeartOutline, ShoppingBagIcon as BagOutline } from 'react-native-heroicons/outline';
-import { HomeIcon as HomeSolid, HeartIcon as HeartSolid, ShoppingBagIcon as BagSolid } from 'react-native-heroicons/solid';
+import { HomeIcon as HomeOutline } from 'react-native-heroicons/outline';
+import { HomeIcon as HomeSolid } from 'react-native-heroicons/solid';
+import { HeartIcon as HeartOutline } from 'react-native-heroicons/outline';
+import { HeartIcon as HeartSolid } from 'react-native-heroicons/solid';
+import { UserGroupIcon as UserGroupOutline } from 'react-native-heroicons/outline';
+import { UserGroupIcon as UserGroupSolid } from 'react-native-heroicons/solid';
+import { MapIcon as MapOutline } from 'react-native-heroicons/outline';
+import { MapIcon as MapSolid } from 'react-native-heroicons/solid';
+import { VideoCameraIcon as VideoCameraOutline } from 'react-native-heroicons/outline';
+import { VideoCameraIcon as VideoCameraSolid } from 'react-native-heroicons/solid';
+
+import HomeScreen from '../screens/HomeScreen';
+import CharactersScreen from '../screens/CharactersScreen';
+import ProductScreen from '../screens/ProductScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
+import Header from '../components/header';
 
 // Create a stack navigator and a bottom tab navigator
 const Stack = createNativeStackNavigator();
@@ -26,10 +39,11 @@ export default function AppNavigation() {
         // Wrap all navigators in a NavigationContainer
         <NavigationContainer>
             <Stack.Navigator screenOptions={{
-                contentStyle: { backgroundColor: 'white' }
+                contentStyle: { backgroundColor: 'white', paddingTop: 220 }
             }}>
                 {/* Define stack navigator screens */}
-                <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
+               
+                <Stack.Screen name="Home" options={{ header: () => <Header /> }} component={HomeTabs} />
                 <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} />
             </Stack.Navigator>
         </NavigationContainer>
@@ -55,8 +69,10 @@ function HomeTabs() {
         >
             {/* Define tabs */}
             <Tab.Screen name="home" component={HomeScreen} />
-            <Tab.Screen name="favourite" component={HomeScreen} />
-            <Tab.Screen name="cart" component={HomeScreen} />
+            <Tab.Screen name="characters" component={CharactersScreen} />
+            <Tab.Screen name="locations" component={CharactersScreen} />
+            <Tab.Screen name="episodes" component={CharactersScreen} />
+            <Tab.Screen name="favorites" component={FavoritesScreen} />
         </Tab.Navigator>
     )
 }
@@ -66,8 +82,10 @@ const menuIcons = (route, focused) => {
     // Define the icon components to be used
     const icons = {
         home: focused ? <HomeSolid size="30" color={themeColors.bgDark} /> : <HomeOutline size="30" strokeWidth={2} color="white" />,
-        favourite: focused ? <HeartSolid size="30" color={themeColors.bgDark} /> : <HeartOutline size="30" strokeWidth={2} color="white" />,
-        cart: focused ? <BagSolid size="30" color={themeColors.bgDark} /> : <BagOutline size="30" strokeWidth={2} color="white" />,
+        characters: focused ? <UserGroupSolid size="30" color={themeColors.bgDark} /> : <UserGroupOutline size="30" strokeWidth={2} color="white" />,
+        locations: focused ? <MapSolid size="30" color={themeColors.bgDark} /> : <MapOutline size="30" strokeWidth={2} color="white" />,
+        episodes: focused ? <VideoCameraSolid size="30" color={themeColors.bgDark} /> : <VideoCameraOutline size="30" strokeWidth={2} color="white" />,
+        favorites: focused ? <HeartSolid size="30" color={themeColors.bgDark} /> : <HeartOutline size="30" strokeWidth={2} color="white" />,
     };
 
     // Get the icon component for the current route

@@ -1,19 +1,37 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftCircleIcon, MinusIcon, PlusIcon } from 'react-native-heroicons/outline';
 import { HeartIcon } from 'react-native-heroicons/solid';
 import { themeColors } from '../theme';
+import { saveFavorite } from '../storage';
 import { ShoppingBag } from 'react-native-feather';
+import { useDispatch } from 'react-redux';
+import { saveFavItem } from '../actions';
 
 export default function FavouriteScreen(props) {
+    const dispatch = useDispatch();
     const item = props.route.params;
-    const [size, setSize] = useState('small');
     const navigation = useNavigation();
+
+    const handleGoBack = useCallback(() => {
+        navigation.goBack()
+    }, [navigation])
+
+    const handleSaveFavorite = useCallback(() => {
+        saveFavorite(item);
+        dispatch(saveFavItem(item));
+    }, [item]);
+
+
+    const dateObject = new Date(item.created);
+    const formattedDate = `${dateObject.toLocaleDateString()}`;
+    const firstEpisode = item.episode?.map(url => url.match(/\d+$/)[0])[0];
+
     return (
-        <View className="flex-1">
+        <View className="flex-1" style={{ position: "absolute" }}>
             <StatusBar style="light" />
             <Image
                 source={require('../assets/images/bg-2.png')}
@@ -21,11 +39,11 @@ export default function FavouriteScreen(props) {
                 className="w-full absolute" />
             <SafeAreaView className="space-y-4">
                 <View className="mx-4 flex-row justify-between items-center">
-                    <TouchableOpacity className=" rounded-full " onPress={() => navigation.goBack()}>
+                    <TouchableOpacity className=" rounded-full " onPress={handleGoBack}>
                         <ArrowLeftCircleIcon size="50" strokeWidth={1.2} color="white" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity className=" rounded-full border-2 border-white p-2">
+                    <TouchableOpacity className=" rounded-full border-2 border-white p-2" onPress={handleSaveFavorite}>
                         <HeartIcon size="24" color="white" />
                     </TouchableOpacity>
                 </View>
@@ -37,35 +55,12 @@ export default function FavouriteScreen(props) {
                         shadowOpacity: 0.9,
                     }}
                     className="flex-row justify-center">
-                    <Image source={{uri:item.image}} className="h-60 w-60 rounded-full" />
+                    <Image source={{ uri: item.image }} className="h-60 w-60 rounded-full" />
                 </View>
                 <View className="flex-row justify-between items-center">
                     <Text style={{ color: themeColors.text }} className="text-3xl font-semibold text-center w-screen">
                         {item.name}
                     </Text>
-                </View>
-                <View className="px-4 space-y-2">
-                    <Text style={{ color: themeColors.text }} className="text-lg font-bold">Coffee size</Text>
-                    <View className="flex-row justify-between">
-                        <TouchableOpacity
-                            onPress={() => setSize('small')}
-                            style={{ backgroundColor: size == 'small' ? themeColors.bgLight : themeColors.bgDark }}
-                            className="p-3 px-8 rounded-full">
-                            <Text className={'text-white'}>Small</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => setSize('medium')}
-                            style={{ backgroundColor: size == 'medium' ? themeColors.bgLight : themeColors.bgDark }}
-                            className="p-3 px-8 rounded-full">
-                            <Text className={'text-white'}>Medium</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => setSize('large')}
-                            style={{ backgroundColor: size == 'large' ? themeColors.bgLight : themeColors.bgDark }}
-                            className="p-3 px-8 rounded-full">
-                            <Text className={'text-white'}>Large</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
 
                 <View className="px-4 space-y-2 h-28">
@@ -75,11 +70,24 @@ export default function FavouriteScreen(props) {
                     </Text>
                 </View>
 
+                <View className="px-4 space-y-2">
+                    <Text style={{ color: themeColors.text }} className="text-lg font-bold">first appearance</Text>
+                    <Text style={{ color: themeColors.text }} className="text-gray-600">
+                        Epiosde:
+                        &nbsp;
+                        {firstEpisode}
+                        &nbsp;
+                        -
+                        &nbsp;
+                        {formattedDate}
+                    </Text>
+                </View>
+
                 <View className="flex-row justify-between items-center px-4 mb-2">
                     <View className="flex-row items-center space-x-1">
                         <Text className="text-base text-gray-700 font-semibold opacity-60">
                             Volume
-              </Text>
+                        </Text>
                         <Text className="text-base text-black font-semibold"> {item.volume}</Text>
                     </View>
                     <View
