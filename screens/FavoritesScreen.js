@@ -19,6 +19,8 @@ export default function FavoritesScreen() {
 	const dispatch = useDispatch();
 	const { favorites } = useSelector(state => state.favsReducer);
 
+	console.log(favorites);
+
 	useEffect(() => {
 		dispatch(fetchFavoritesData());
 	}, [dispatch]);
@@ -28,9 +30,9 @@ export default function FavoritesScreen() {
 			<StatusBar />
 
 			<SafeAreaView style={{ paddingTop: 20, minWidth: "100%" }}>
-				{favorites?.length === 0 ? (
+				{(!favorites || favorites?.length === 0) ? (
 					<View style={styles.noFavoritesContainer}>
-						<Text style={styles.noFavoritesText}>No favorites added</Text>
+						<Text style={styles.noFavoritesText}>No favorites added, browse the main page to check some characters!</Text>
 					</View>
 				) : (
 					<>
@@ -45,7 +47,7 @@ export default function FavoritesScreen() {
 							<Text className={"font-semibold text-white"}>Delete all</Text>
 						</TouchableOpacity>
 						<ScrollView contentContainerStyle={styles.gridContainer}>
-							{favorites.map((item) => (
+							{favorites?.map((item) => (
 								<View style={styles.cardContainer} key={`${item.id}${generateUniqueId()}`}>
 									<CharacterCard customCardStyles={{ height: "auto", width: "auto", padding: 5 }} item={item} />
 								</View>
@@ -76,6 +78,7 @@ const styles = StyleSheet.create({
 	},
 	noFavoritesText: {
 		fontSize: 16,
+		paddingHorizontal:80
 	},
 	gridContainer: {
 		flexDirection: 'row',

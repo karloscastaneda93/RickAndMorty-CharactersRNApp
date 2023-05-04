@@ -9,7 +9,7 @@ const initialState = {
 export const favsReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SAVE_FAVORITE_ITEM':
-            if (state.favorites.some(favorite => favorite.id === action.payload.id)) {
+            if (state?.favorites?.some(favorite => favorite.id === action.payload.id)) {
                 return state;
             }
             return { ...state, favorites: [...state.favorites, action.payload] };
